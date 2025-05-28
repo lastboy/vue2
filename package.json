@@ -1,8 +1,8 @@
 {
-  "name": "vue",
-  "version": "2.7.16",
+  "name": "@lastboy/vue2",
+  "version": "1.0.0",
   "packageManager": "pnpm@8.9.2",
-  "description": "Reactive, component-oriented view layer for modern web interfaces.",
+  "description": "Fork of Vue 2.7.16 with patched CVE-2024-9506 (regex ReDoS vulnerability)",
   "main": "dist/vue.runtime.common.js",
   "module": "dist/vue.runtime.esm.js",
   "unpkg": "dist/vue.js",
@@ -54,6 +54,7 @@
     "test:e2e": "npm run build -- full-prod,server-renderer-basic && vitest run test/e2e",
     "test:transition": "karma start test/transition/karma.conf.js",
     "test:types": "npm run build:types && tsc -p ./types/tsconfig.json",
+    "test:patch": "node test/patch-test/test-runner.js",
     "format": "prettier --write --parser typescript \"(src|test|packages|types)/**/*.ts\"",
     "ts-check": "tsc -p tsconfig.json --noEmit",
     "ts-check:test": "tsc -p test/tsconfig.json --noEmit",
@@ -75,17 +76,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vuejs/vue.git"
+    "url": "https://github.com/lastboy/vue2.git"
   },
   "keywords": [
-    "vue"
+    "vue",
+    "vue2",
+    "patched",
+    "fork",
+    "cve-2024-9506",
+    "legacy",
+    "security"
   ],
-  "author": "Evan You",
+  "author": "Arik Lewin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vuejs/vue/issues"
+    "url": "https://github.com/lastboy/vue2/issues"
   },
-  "homepage": "https://github.com/vuejs/vue#readme",
+  "homepage": "https://github.com/lastboy/vue2#readme",
   "dependencies": {
     "@vue/compiler-sfc": "workspace:*",
     "csstype": "^3.1.0"

@@ -1,3 +1,34 @@
+# @lastboy/vue2
+
+> Fork of [Vue 2.7.16](https://github.com/vuejs/vue/tree/v2.7.16) with patched CVE-2024-9506 (ReDoS vulnerability in `parseHTML`).
+
+This package is maintained independently from the Vue core team and is intended for use in environments where Vue 2 is still required but must meet security compliance standards.
+
+
+### 🔍 Security Patch Test
+
+This fork includes a test to verify the patch for [CVE-2024-9506](https://github.com/advisories/GHSA-5j4c-8p2g-v4jx), a **ReDoS vulnerability** in Vue's `parseHTML` function.
+
+Running the test:
+
+```bash
+pnpm test:patch
+```
+
+This test runs a deliberately malformed HTML payload through Vue.compile() using:  
+  
+* Vue 2.7.16 from CDN (unpatched)  
+* Local patched build
+
+It measures the compile time and prints a warning and result:  
+If the parse takes more than 1000ms, the version is considered vulnerable.  
+The patched version should return in ~20ms and display as not vulnerable.
+
+⚠️ Note: Compiler warnings are expected in both versions due to the malformed template. The warning confirms the parser is reached but is not an indication of vulnerability.
+
+---
+
+
 ## Vue 2 has reached End of Life
 
 **You are looking at the now inactive repository for Vue 2. The actively maintained repository for the latest version of Vue is [vuejs/core](https://github.com/vuejs/core).**
