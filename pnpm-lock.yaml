@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@vue/compiler-sfc':
         specifier: 2.7.16
-        version: link:packages/compiler-sfc
+        version: 2.7.16
       csstype:
         specifier: ^3.1.0
         version: 3.1.3
@@ -1417,7 +1417,6 @@ packages:
       source-map: 0.6.1
     optionalDependencies:
       prettier: 2.8.8
-    dev: true
 
   /@vue/consolidate@0.17.3:
     resolution: {integrity: sha512-nl0SWcTMzaaTnJ5G6V8VlMDA1CVVrNnaQKF1aBZU3kXtjgU9jtHMsEAsgjoRUx+T0EVJk9TgbmxGhK3pOk22zw==}
