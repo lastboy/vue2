@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer')
 const path = require('path')
 
 async function runTest(file) {
+    console.log(`\n -------------> Loading test file: ${file}\n`);
   const browser = await puppeteer.launch({
     args: ['--allow-file-access-from-files']
   })
@@ -17,6 +18,7 @@ async function runTest(file) {
 }
 
 ;(async () => {
+  await runTest('patched-namespace.html')
   await runTest('not-patched.html')
   await runTest('patched.html')
 })()
