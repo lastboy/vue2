@@ -1,6 +1,6 @@
 {
   "name": "@lastboy/vue2",
-  "version": "6.4.3",
+  "version": "6.4.4",
   "packageManager": "pnpm@8.9.2",
   "description": "Fork of Vue 2.7.16 with patched CVE-2024-9506 (regex ReDoS vulnerability)",
   "main": "dist/vue.runtime.common.js",

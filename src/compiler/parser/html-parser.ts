@@ -23,7 +23,8 @@ const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z${unicodeRegExp.source}]*`
 const qnameCapture = `((?:${ncname}\\:)?${ncname})`
 const startTagOpen = new RegExp(`^<${qnameCapture}`)
 const startTagClose = /^\s*(\/?)>/
-const endTag = /^<\/([a-zA-Z_][\w\-\.]*)[^>]*>/;
+const endTag = /^<\/((?:[a-zA-Z_][\w\-\.]*:)?[a-zA-Z_][\w\-\.]*)[^>]*>/;
+
 const doctype = /^<!DOCTYPE [^>]+>/i
 // #7298: escape - to avoid being passed as HTML comment when inlined in page
 const comment = /^<!\--/

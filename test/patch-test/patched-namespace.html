@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vue CDN Test</title>
+    <script src="../../dist/vue.js"></script>
+    <!-- or wherever your local bundle is -->
+    <script src="main.test.js"></script>
+  </head>
+
+  <body>
+    <script>
+      document.body.innerHTML = `
+      <div id="test1"></div>
+      <div id="test2"></div>
+    `
+
+      // No namespace — should always work
+      // Console color helpers
+      const cyan = '\x1b[36m',
+        reset = '\x1b[0m'
+
+      // No namespace — should always work
+      console.log('\n');
+      console.log(`${cyan}Running [test with-no-namespace]: basic custom tag test...${reset}`)
+      new Vue({
+        el: '#test1',
+        components: {
+          'custom-tag': {
+            template: '<span>ok</span>'
+          }
+        },
+        template: '<div><custom-tag /></div>',
+        mounted() {
+          const html = this.$el.innerHTML
+          console.log('[test with-no-namespace] rendered:', html)
+          if (html.includes('<span>ok</span>')) {
+            console.log('[test with-no-namespace] ✅ Passed')
+          } else {
+            console.error('[test with-no-namespace] ❌ Failed')
+          }
+        }
+      })
+
+      // Namespaced element — fails in buggy version, works with patch
+      console.log('\n');
+      console.log(
+        `\n${cyan}Running [test with-namespace]: namespaced tag <svg:g> test...${reset}`
+      )
+      new Vue({
+        el: '#test2',
+        template: '<svg><svg:g>svg content</svg:g></svg>',
+        mounted() {
+          const g = this.$el.querySelector('g')
+          if (g && g.innerHTML.includes('svg content')) {
+            console.log('[test with-namespace] ✅ Passed (namespace supported)')
+          } else {
+            console.error('[test with-namespace] ❌ Failed (namespace not handled)')
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
