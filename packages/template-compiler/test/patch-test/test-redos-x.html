@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vue Compile ReDoS Test</title>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script> -->
+    <script src="../../dist/vue.js"></script>
+
+    <script>
+      function runTestNow() {
+        console.log('[TEST] ReDoS patch test started')
+
+        const safeTemplate = `<div>Hello Vue</div>`
+        const maliciousTemplate =
+          '<script>' + ' </'.repeat(100000) + '<\\/script>'
+
+        function runCompileTest(template, label) {
+          let didFinish = false
+
+          // Watchdog: fails test if compile hangs
+          const watchdog = setTimeout(() => {
+            if (!didFinish) {
+              console.error(
+                `[${label}] ❌ Compile likely hung — possible ReDoS`
+              )
+            }
+          }, 2000)
+
+          const start = performance.now()
+          try {
+            Vue.compile(template)
+            didFinish = true
+          } catch (e) {
+            console.error(`[${label}] Compile error: ${e.message}`)
+            didFinish = true
+          }
+          clearTimeout(watchdog)
+
+          const duration = performance.now() - start
+          console.log(`[${label}] Compile took ${duration.toFixed(2)}ms`)
+
+          if (duration > 1000) {
+            console.error(`[${label}] ❌ Potential ReDoS — took too long`)
+          } else if (didFinish) {
+            console.log(`[${label}] ✅ Compile time OK`)
+          }
+        }
+
+        runCompileTest(safeTemplate, 'Safe Template')
+        runCompileTest(maliciousTemplate, 'Malicious Template')
+      }
+    </script>
+  </head>
+  <body>
+    <script>
+      if (window.Vue) {
+        runTestNow()
+      } else {
+        document.addEventListener('DOMContentLoaded', runTestNow)
+      }
+    </script>
+  </body>
+</html>

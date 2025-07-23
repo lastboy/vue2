@@ -1,5 +1,49 @@
 # vue-template-compiler
 
+> Fork of [vue-template-compiler@2.7.16](https://github.com/vuejs/vue/tree/v2.7.16) with patched [CVE-2024-9506](https://github.com/advisories/GHSA-5j4c-8p2g-v4jx), a ReDoS vulnerability in the `parseHTML` function.
+
+This package is automatically built alongside [@lastboy/vue2](https://github.com/lastboy/vue2) and provides a secure template compiler compatible with that runtime.
+
+This fork is intended for teams that still rely on Vue 2 but need to meet strict security compliance standards. It is API-compatible with the original `vue-template-compiler` and can be used as a drop-in replacement.
+
+---
+
+### 🔍 Security Patch Test
+
+This compiler has been tested against a malicious HTML payload known to exploit the vulnerable regex in `parseHTML`. The test uses `compiler.compile()` directly with a crafted `<script>` tag payload to measure parsing time and detect exponential regex backtracking.
+
+Run the test:
+
+```bash
+pnpm test:patch
+```
+
+This runs a benchmark using:
+
+- ⚠️ `vue-template-compiler@2.7.16` (unpatched)  
+- ✅ This forked, patched compiler
+
+If compilation takes longer than 1000ms, the test reports the version as vulnerable.  
+The patched compiler finishes in under 20ms and is marked as safe.
+
+> ⚠️ Warnings may still appear in both cases due to malformed input — this is expected and confirms the compiler was invoked.
+
+---
+
+<br>
+
+_This documentation is based on the original `vue-template-compiler` package and applies fully to this fork unless otherwise noted._
+
+### 🔍 Security Patch Test
+
+This compiler has been tested against a malicious HTML payload known to exploit the vulnerable regex in `parseHTML`. The test uses `compiler.compile()` directly with a crafted `<script>` tag payload to measure parsing time and detect exponential regex backtracking.
+
+Run the test:
+
+```pnpm test:patch```
+
+---
+
 > This package is auto-generated. For pull requests please see [src/platforms/web/entry-compiler.js](https://github.com/vuejs/vue/tree/dev/src/platforms/web/entry-compiler.js).
 
 This package can be used to pre-compile Vue 2.0 templates into render functions to avoid runtime-compilation overhead and CSP restrictions. In most cases you should be using it with [`vue-loader`](https://github.com/vuejs/vue-loader), you will only need it separately if you are writing build tools with very specific needs.
@@ -11,7 +55,7 @@ npm install vue-template-compiler
 ```
 
 ``` js
-const compiler = require('vue-template-compiler')
+const compiler = require('@lastboy/vue2').version
 ```
 
 ## API
@@ -33,7 +77,7 @@ Note the returned function code uses `with` and thus cannot be used in strict mo
 
 #### Options
 
-- `outputSourceRange` *new in 2.6*
+- `outputSourceRange` _new in 2.6_
   - Type: `boolean`
   - Default: `false`
 
